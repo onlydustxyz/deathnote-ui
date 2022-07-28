@@ -1,11 +1,13 @@
 import { selector, selectorFamily } from "recoil";
+import { applicationRepository } from "src/model/applications/repository";
 import {
   AssignedContribution,
   CompletedContribution,
   ContributionStatusEnum,
   OpenContribution,
   Project,
-  repository,
+  contributionRepository,
+  Contribution,
 } from "src/model/contributions/repository";
 import { userContributorIdSelector } from "./profileRegistryContract";
 
@@ -14,7 +16,7 @@ export const contributionsQuery = selector({
   get: async ({ get }) => {
     const userContributorId = get(userContributorIdSelector);
 
-    const contributions = await repository.list({ contributorId: userContributorId });
+    const contributions = await contributionRepository.list({ contributorId: userContributorId });
     return contributions;
   },
 });
@@ -177,4 +179,19 @@ export const technologiesQuery = selector({
 
     return Array.from(technologies);
   },
+});
+
+export const hasContributorAppliedToContributionSelector = selectorFamily({
+  key: "HasContributorAppliedToContribution",
+  get:
+    (contributionId?: Contribution["id"] | undefined) =>
+    async ({ get }) => {
+      const contributorId = get(userContributorIdSelector);
+
+      if (!contributorId || !contributionId) {
+        return false;
+      }
+
+      return await applicationRepository.hasContributorAppliedToContribution({ contributionId, contributorId });
+    },
 });

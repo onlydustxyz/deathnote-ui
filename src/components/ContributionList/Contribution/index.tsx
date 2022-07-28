@@ -25,7 +25,7 @@ const Contribution: FC<Props> = ({ contribution }) => {
     >
       <div className={cn("h-full flex flex-col", cardContentClassName)}>
         <div className="h-[72px] grid grid-cols-2 items-center uppercase mx-8">
-          <ContributionStatus status={contribution.status} gated={contribution.eligible === false} />
+          <ContributionStatus status={contribution.status} gated={contribution.eligible === false} applied={false} />
         </div>
         <div className="grow flex flex-col justify-center mb-8">
           <h2 className="font-alfreda text-3xl leading-[42px] text-center px-8 line-clamp-4">{contribution.title}</h2>

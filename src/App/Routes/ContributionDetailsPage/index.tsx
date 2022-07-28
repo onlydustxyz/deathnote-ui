@@ -5,6 +5,7 @@ import {
   accountAtom,
   contributionQuery,
   displayRegisterModalAtom,
+  hasContributorAppliedToContributionSelector,
   isGithubRegisteredSelector,
   userContributorIdSelector,
   userGithubHandleSelector,
@@ -23,6 +24,9 @@ const ContributionDetailsPageContainer: FC = () => {
   const isGithubRegistered = useRecoilValue_TRANSITION_SUPPORT_UNSTABLE(isGithubRegisteredSelector);
   const userGithubHandle = useRecoilValue_TRANSITION_SUPPORT_UNSTABLE(userGithubHandleSelector);
   const setDisplayRegisterModal = useSetRecoilState(displayRegisterModalAtom);
+  const hasAppliedToContribution = useRecoilValue_TRANSITION_SUPPORT_UNSTABLE(
+    hasContributorAppliedToContributionSelector(contributionId)
+  );
 
   const buildTypeformParams = () => {
     const typeformParams = new URLSearchParams();
@@ -56,7 +60,13 @@ const ContributionDetailsPageContainer: FC = () => {
   }
 
   return (
-    <ContributionDetailsPage contribution={contribution} apply={apply} submit={submit} contributorId={contributorId} />
+    <ContributionDetailsPage
+      contribution={contribution}
+      apply={apply}
+      submit={submit}
+      contributorId={contributorId}
+      hasAppliedToContribution={hasAppliedToContribution}
+    />
   );
 };
 

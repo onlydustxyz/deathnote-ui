@@ -6,25 +6,28 @@ import { Contribution, ContributionMetadataAssignee, ContributionStatusEnum } fr
 
 type Props = {
   contribution: Contribution;
+  hasAppliedToContribution: boolean;
 };
 
-const classNamesByStatus: Record<ContributionStatusEnum | "gated", string> = {
+const classNamesByStatus: Record<ContributionStatusEnum | "gated" | "applied", string> = {
   [ContributionStatusEnum.OPEN]: "",
   [ContributionStatusEnum.ABANDONED]: "",
   [ContributionStatusEnum.ASSIGNED]: "bg-orange/7 backdrop-blur-[6px]",
   [ContributionStatusEnum.COMPLETED]: "bg-white/4 backdrop-blur-[6px]",
   gated: "bg-[#0038FF]/10 backdrop-blur-[6px]",
+  applied: "bg-[#1F96A6]/10 backdrop-blur-[6px]",
 };
 
-const StatusHeader: FC<Props> = ({ contribution }) => {
-  const computedStatus =
-    contribution.status === ContributionStatusEnum.OPEN && contribution.eligible === false
-      ? "gated"
-      : contribution.status;
+const StatusHeader: FC<Props> = ({ contribution, hasAppliedToContribution }) => {
+  const computedStatus = computeStatus();
 
   return (
     <div className={cn(classNamesByStatus[computedStatus], "px-10 w-full flex items-center h-[66px]")}>
-      <ContributionStatus status={contribution.status} gated={contribution.eligible === false} />
+      <ContributionStatus
+        status={contribution.status}
+        gated={contribution.eligible === false}
+        applied={hasAppliedToContribution}
+      />
       {renderDetails()}
     </div>
   );
@@ -58,6 +61,20 @@ const StatusHeader: FC<Props> = ({ contribution }) => {
     }
 
     return "???";
+  }
+
+  function computeStatus() {
+    if (contribution.status === ContributionStatusEnum.OPEN) {
+      if (hasAppliedToContribution) {
+        return "applied";
+      }
+
+      if (contribution.eligible === false) {
+        return "gated";
+      }
+    }
+
+    return contribution.status;
   }
 };
 
