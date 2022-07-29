@@ -16,16 +16,23 @@ type Props = {
   submit: () => void;
   contribution: Contribution;
   contributorId?: number;
+  hasAppliedToContribution: boolean;
 };
 
-const ContributionDetailsPage: FC<Props> = ({ apply, submit, contribution, contributorId }) => {
+const ContributionDetailsPage: FC<Props> = ({
+  apply,
+  submit,
+  contribution,
+  contributorId,
+  hasAppliedToContribution = false,
+}) => {
   return (
     <div className="relative mt-10 px-8 flex flex-col items-center max-w-screen-2xl w-full">
       <div className="flex flex-row max-w-[1410px] w-full justify-start">
         <BackButton />
 
         <div className="relative flex flex-col items-center px-12 max-w-screen-xl w-full">
-          <StatusHeader contribution={contribution} />
+          <StatusHeader contribution={contribution} hasAppliedToContribution={hasAppliedToContribution} />
         </div>
       </div>
       <div className="relative flex flex-col items-center px-12 max-w-screen-xl w-full">
@@ -67,6 +74,14 @@ const ContributionDetailsPage: FC<Props> = ({ apply, submit, contribution, contr
     }
 
     if (ContributionStatusEnum.OPEN === contribution.status) {
+      if (hasAppliedToContribution) {
+        return (
+          <Button onClick={apply} disabled={true}>
+            Applied
+          </Button>
+        );
+      }
+
       return (
         <Button onClick={apply} disabled={contribution.eligible === false}>
           Apply

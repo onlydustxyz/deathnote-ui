@@ -100,5 +100,5 @@ export interface ContributionRepository {
   list(params?: ListParams): Promise<Contribution[]>;
 }
 
-export const repository: ContributionRepository =
+export const contributionRepository: ContributionRepository =
   process.env.NODE_ENV === "test" ? new InMemoryContributionRepository() : new FetchedContributionRepository();
